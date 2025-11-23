@@ -28,6 +28,7 @@ class DjangoORMQuery:
             3: qs,
         }
         
+        # Processing `SELECT` queries
         if qs.startswith("SELECT"):
             self.model_name = qs.split('FROM "')[1].split('"')[0]
             self.query_type = "select"
@@ -42,7 +43,38 @@ class DjangoORMQuery:
             if field_count > 1:
                 self.query[1] = f"Select ({field_count} fields) FROM {self.model_name}"
                 self.query[2] = f"Select ({field_count} fields) FROM {after_from}"
+            else:
+                self.query[1] = f"{before_from} FROM {self.model_name}"
         
+        # Processing `INSERT` queries
+        elif qs.startswith("INSERT"):
+            self.model_name = qs.split('INTO "')[1].split('"')[0]
+            self.query_type = "insert"
+
+            before_values = qs.split("VALUES")[0]
+            after_values = qs.split("VALUES")[1]
+
+            field_count = len(before_values.split(","))
+            if field_count > 1:
+                self.query[1] = f"INSERT INTO {self.model_name} ({field_count} fields)"
+                self.query[2] = f"INSERT INTO {self.model_name} ({field_count} fields) {after_values}"
+            else:
+                self.query[1] = f"INSERT INTO {self.model_name}"
+
+        # Processing `UPDATE` queries
+        elif qs.startswith("UPDATE"):
+            self.model_name = qs.split('UPDATE "')[1].split('"')[0]
+            self.query_type = "update"
+
+            set_statement = qs.split('" SET')[1].split(' WHERE "')[0]
+            after_set = qs.split(' WHERE "')[1]
+
+            field_count = len(set_statement.split(', "'))
+            if field_count > 1:
+                self.query[1] = f"UPDATE {self.model_name} ({field_count} fields)"
+                self.query[2] = f"UPDATE {self.model_name} ({field_count} fields) {after_set}"
+            else:
+                self.query[1] = f"UPDATE {self.model_name}"
 
 
 class DjangoORMWatch:
