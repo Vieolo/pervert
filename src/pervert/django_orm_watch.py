@@ -40,11 +40,9 @@ class DjangoORMQuery:
             # So, to shorten it, we count the items and add it between the SELECT and FROM
             field_count = len(before_from.split(","))
             if field_count > 1:
-                self.query[2] = f"Select ({field_count} fields) FROM {after_from}" + after_from
+                self.query[1] = f"Select ({field_count} fields) FROM {self.model_name}"
+                self.query[2] = f"Select ({field_count} fields) FROM {after_from}"
         
-        # Adjusting the verbosity 1 of the query
-        if self.model_name != "unknwon" and self.query_type != "other":
-            self.query[1] = f"{self.query_type} query for {self.model_name}"
 
 
 class DjangoORMWatch:
@@ -91,6 +89,13 @@ class DjangoORMWatch:
         return self
     
     def print(self, verbosity: Literal[0, 1, 2, 3] = 2):
+        """Prints the query data and their overview
+
+        By passing the verbosity level, you can choose how detailed the queries should be printed
+
+        Args:
+            verbosity (Literal[0, 1, 2, 3], optional): The verbosity level of the queries. Defaults to 2.
+        """
         v = verbosity
         if verbosity not in [0, 1, 2, 3]:
             v = 2
@@ -98,7 +103,7 @@ class DjangoORMWatch:
         
         if verbosity > 0:
             print("******************************")
-            print("Start of queries")
+            print(f"Start of queries - Verbosity level {v}" + (" (original)" if v == 3 else ""))
             print("******************************")
             
             index = 1
@@ -106,8 +111,9 @@ class DjangoORMWatch:
                 print("-=-=-=-==-=")
                 print(f"No. {index}")
                 print(f"Model: {q.model_name}")
-                print(f"Query: {q.query[v]}")
                 print(f"Time: {q.time}")
+                print("-")
+                print(q.query[v])
                 print("-=-=-=-==-=")
                 index += 1
 
@@ -119,3 +125,4 @@ class DjangoORMWatch:
         print(f"\tConnections: {len(self.connections)}")
         print(f"\tQueries: {len(self.queries)}")
         print(f"\tTime: {duration: .6f}s")
+        print("******************************")
