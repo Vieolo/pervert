@@ -76,6 +76,12 @@ class DjangoORMQuery:
             else:
                 self.query[1] = f"UPDATE {self.model_name}"
 
+        # Processing `DELETE` queries
+        elif qs.startswith("DELETE"):
+            self.model_name = qs.split('FROM "')[1].split('"')[0]
+            self.query_type = "delete"
+            self.query[1] = f"DELETE FROM {self.model_name}"
+
 
 class DjangoORMWatch:
 
@@ -87,10 +93,10 @@ class DjangoORMWatch:
         self.connections: list[BaseDatabaseWrapper] = []
         
         # Starting the total timer
-        self.start = time.perf_counter()
+        self.start = time.perf_counter_ns()
         
         # Then end time, will be set after calling the `stop` function
-        self.end: float = 0
+        self.end: int = self.start
     
 
     @classmethod
@@ -108,7 +114,7 @@ class DjangoORMWatch:
         """Stops the watch and stores the queries for further processing
         """
         # Stopping the end timer
-        self.end = time.perf_counter()
+        self.end = time.perf_counter_ns()
 
         # Storing the final queries
         self.connections: list[BaseDatabaseWrapper] = db_connections.all()
@@ -131,7 +137,7 @@ class DjangoORMWatch:
         v = verbosity
         if verbosity not in [0, 1, 2, 3]:
             v = 2
-        duration = self.end - self.start
+        duration = (self.end - self.start) / 1_000_000 # nanosecond to millsecond
         
         if verbosity > 0:
             print("******************************")
@@ -156,5 +162,5 @@ class DjangoORMWatch:
         print("Overview of the queries:")
         print(f"\tConnections: {len(self.connections)}")
         print(f"\tQueries: {len(self.queries)}")
-        print(f"\tTime: {duration: .6f}s")
+        print(f"\tTime: {duration: .2f} ms")
         print("******************************")
