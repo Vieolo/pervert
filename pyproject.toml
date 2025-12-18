@@ -1,5 +1,5 @@
 [project]
-name = "pervert"
+name = "pervpy"
 version = "0.1.0"
 description = "Analyzing and profiling python applications, innocently"
 readme = "README.md"
@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 dependencies = []
 
 [project.scripts]
-pervert = "pervert:main"
+pervpy = "pervpy:main"
 
 [build-system]
 requires = ["uv_build>=0.9.9,<0.10.0"]

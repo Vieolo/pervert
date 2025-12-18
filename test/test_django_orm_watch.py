@@ -1,4 +1,4 @@
-from src.pervert.django_orm_watch import DjangoORMQuery
+from src.pervpy.django_orm_watch import DjangoORMQuery
 
 def test_parse_sql_query():
     # Testing an empty query
