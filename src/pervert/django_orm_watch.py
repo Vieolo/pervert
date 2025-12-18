@@ -52,12 +52,12 @@ class DjangoORMQuery:
             self.query_type = "insert"
 
             before_values = qs.split("VALUES")[0]
-            after_values = qs.split("VALUES")[1]
+            after_values = ")".join(qs.split(")")[2:])
 
             field_count = len(before_values.split(","))
             if field_count > 1:
                 self.query[1] = f"INSERT INTO {self.model_name} ({field_count} fields)"
-                self.query[2] = f"INSERT INTO {self.model_name} ({field_count} fields) {after_values}"
+                self.query[2] = f"INSERT INTO {self.model_name} ({field_count} fields){after_values}"
             else:
                 self.query[1] = f"INSERT INTO {self.model_name}"
 
@@ -72,7 +72,7 @@ class DjangoORMQuery:
             field_count = len(set_statement.split(', "'))
             if field_count > 1:
                 self.query[1] = f"UPDATE {self.model_name} ({field_count} fields)"
-                self.query[2] = f"UPDATE {self.model_name} ({field_count} fields) {after_set}"
+                self.query[2] = f'UPDATE {self.model_name} ({field_count} fields) WHERE "{after_set}'
             else:
                 self.query[1] = f"UPDATE {self.model_name}"
 
