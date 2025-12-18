@@ -1,5 +1,5 @@
-# pervert
-pervert is created with the aim to provide a centralized package for profiling and analyzing the performance of different Python applications.
+# pervpy
+pervpy is created with the aim to provide a centralized package for profiling and analyzing the performance of different Python applications.
 
 At the current stage, it only supports monitoring Django ORM's SQL queries.
 

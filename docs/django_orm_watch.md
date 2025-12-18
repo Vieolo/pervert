@@ -5,7 +5,7 @@ This class provides helper functions to list and monitor the frequency and the s
 Here is a sample usage:
 
 ```python
-from pervert.django_orm_watch import DjangoORMWatch
+from pervpy.django_orm_watch import DjangoORMWatch
 
 # Start the watcher instance
 watch = DjangoORMWatch()
