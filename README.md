@@ -5,15 +5,14 @@ At the current stage, it only supports monitoring Django ORM's SQL queries.
 
 ## Install
 
-### Using pip
+`pervpy` should only be used in development and should not be added in production
+
 ```bash
-pip install perpvy
+uv add --dev pervpy
+# or
+pip install pervpy
 ```
 
-### Using uv
-```bash
-uv add --dev perpvy
-```
 
 ## Sections
 [DjangoORMWatch](./docs/django_orm_watch.md)
