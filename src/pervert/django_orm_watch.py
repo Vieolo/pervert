@@ -41,8 +41,8 @@ class DjangoORMQuery:
             # So, to shorten it, we count the items and add it between the SELECT and FROM
             field_count = len(before_from.split(","))
             if field_count > 1:
-                self.query[1] = f"Select ({field_count} fields) FROM {self.model_name}"
-                self.query[2] = f"Select ({field_count} fields) FROM {after_from}"
+                self.query[1] = f"SELECT ({field_count} fields) FROM {self.model_name}"
+                self.query[2] = f"SELECT ({field_count} fields) FROM{after_from}"
             else:
                 self.query[1] = f"{before_from} FROM {self.model_name}"
         
