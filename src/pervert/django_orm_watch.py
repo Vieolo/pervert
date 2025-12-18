@@ -16,10 +16,10 @@ class DjangoORMQuery:
         self.query_data: dict[str, str] = raw_dict
         
         # The time calculated 
-        self.time: str = raw_dict["time"]
+        self.time: str = raw_dict.get("time", "0")
         
         # Saving the different verbosity levels of the query
-        qs: str = raw_dict["sql"]
+        qs: str = raw_dict.get("sql", "None")
         self.query_type: Literal["select", "update", "insert", "delete", "other"] = "other"
         self.model_name = "unknown"
         self.query: dict[int, str] = {
