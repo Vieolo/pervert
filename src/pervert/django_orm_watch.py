@@ -16,10 +16,10 @@ class DjangoORMQuery:
         self.query_data: dict[str, str] = raw_dict
         
         # The time calculated 
-        self.time: str = raw_dict["time"]
+        self.time: str = raw_dict.get("time", "0")
         
         # Saving the different verbosity levels of the query
-        qs: str = raw_dict["sql"]
+        qs: str = raw_dict.get("sql", "None")
         self.query_type: Literal["select", "update", "insert", "delete", "other"] = "other"
         self.model_name = "unknown"
         self.query: dict[int, str] = {
@@ -41,8 +41,8 @@ class DjangoORMQuery:
             # So, to shorten it, we count the items and add it between the SELECT and FROM
             field_count = len(before_from.split(","))
             if field_count > 1:
-                self.query[1] = f"Select ({field_count} fields) FROM {self.model_name}"
-                self.query[2] = f"Select ({field_count} fields) FROM {after_from}"
+                self.query[1] = f"SELECT ({field_count} fields) FROM {self.model_name}"
+                self.query[2] = f"SELECT ({field_count} fields) FROM{after_from}"
             else:
                 self.query[1] = f"{before_from} FROM {self.model_name}"
         
@@ -52,12 +52,12 @@ class DjangoORMQuery:
             self.query_type = "insert"
 
             before_values = qs.split("VALUES")[0]
-            after_values = qs.split("VALUES")[1]
+            after_values = ")".join(qs.split(")")[2:])
 
             field_count = len(before_values.split(","))
             if field_count > 1:
                 self.query[1] = f"INSERT INTO {self.model_name} ({field_count} fields)"
-                self.query[2] = f"INSERT INTO {self.model_name} ({field_count} fields) {after_values}"
+                self.query[2] = f"INSERT INTO {self.model_name} ({field_count} fields){after_values}"
             else:
                 self.query[1] = f"INSERT INTO {self.model_name}"
 
@@ -72,7 +72,7 @@ class DjangoORMQuery:
             field_count = len(set_statement.split(', "'))
             if field_count > 1:
                 self.query[1] = f"UPDATE {self.model_name} ({field_count} fields)"
-                self.query[2] = f"UPDATE {self.model_name} ({field_count} fields) {after_set}"
+                self.query[2] = f'UPDATE {self.model_name} ({field_count} fields) WHERE "{after_set}'
             else:
                 self.query[1] = f"UPDATE {self.model_name}"
 
