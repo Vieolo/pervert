@@ -4,6 +4,8 @@ This class provides helper functions to list and monitor the frequency and the s
 ## Basic Usage
 Here is a basic usage. It involves creating an instance of `DjangoORMWatch` at the start of the code and then call stop on the instance when the code to be evaluated is completed. The `stop` function returns a reference of the self and you can either use the `print` function to print all of the data or use the data of the instance.
 
+Have in mind that `DjangoORMWatch` works only when `DEBUG` is set to True
+
 ```python
 from pervpy.django_orm_watch import DjangoORMWatch
 
