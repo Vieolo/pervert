@@ -1,8 +1,10 @@
 # Change Log
 
+## v0.1.3 (2025-12-21)
+- Updated README
+
 ## v0.1.2 (2025-12-18)
 - Added a note in README that `pervpy` is a development package and should not be added in production
-
 
 ## v0.1.1 (2025-12-18)
 - Improved the summary of the requests
